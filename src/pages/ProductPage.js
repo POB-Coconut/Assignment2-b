@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { ERROR_MESSAGE } from "utils/config";
 import { v4 as uuidv4 } from "uuid";
+import "./Product.css";
 
 class ProductPage extends Component {
 	constructor() {
 		super();
 		this.state = {
-			data: [],
+			products: [],
+			currentProduct: null,
 		};
 	}
 
@@ -14,21 +15,104 @@ class ProductPage extends Component {
 		try {
 			const res = await fetch("http://localhost:3005/data/productData.json");
 			const data = await res.json();
-			this.setState({ data: data });
-			this.state.data.map((x) => (x.id = uuidv4()));
-			console.log(this.state.data);
+			this.setState({
+				products: data.map((product) => {
+					product.id = uuidv4();
+					product.isNotInterested = false;
+					return product;
+				}),
+			});
+			this.setState({
+				currentProduct: this.state.products[0],
+			});
 			if (!res.ok) {
-				throw new Error(ERROR_MESSAGE);
+				throw new Error("error");
 			}
 		} catch (err) {
 			console.error(err);
 		}
 	}
 
+	shuffleProduct() {
+		const end = this.state.products.length - 1;
+		const randomNumber = Math.floor(Math.random() * (end - 0) + 0);
+		this.setState({
+			currentProduct: this.state.products[randomNumber],
+		});
+	}
+
+	setIsNotInterested(id) {
+		const newProducts = this.state.products.map((product) => {
+			if (product.id === id) {
+				console.log(id, product.id);
+				product.isNotInterested = true;
+			}
+			return product;
+		});
+		this.setState({
+			products: newProducts,
+		});
+		console.log(this.state.products);
+	}
+	getProductDetail(id) {
+		const targetProduct = this.state.products.find(
+			(product) => product.id === id
+		);
+		this.setState({
+			currentProduct: targetProduct,
+		});
+	}
+
 	render() {
+		if (!this.state.currentProduct) {
+			return <div></div>;
+		}
 		return (
-			<div>
-				<p></p>
+			<div className="container">
+				<div className="product-detail">
+					<h2>{this.state.currentProduct.title}</h2>
+					<h2>{this.state.currentProduct.brand}</h2>
+					<h2>{this.state.currentProduct.price}</h2>
+					<button
+						onClick={() => {
+							this.setIsNotInterested(this.state.currentProduct.id);
+							this.shuffleProduct();
+						}}
+					>
+						관심없음
+					</button>
+					<button
+						onClick={() => {
+							this.shuffleProduct();
+						}}
+					>
+						랜덤상품조회
+					</button>
+				</div>
+				<ul className="products">
+					{this.state.products.map((product) => {
+						const { title, id, isNotInterested } = product;
+
+						if (isNotInterested) {
+							console.log(isNotInterested);
+							return (
+								<li className="product not-interested" key={id}>
+									<h2 className="title">{title}</h2>
+								</li>
+							);
+						}
+
+						return (
+							<li
+								className="product"
+								onClick={() => this.getProductDetail(id)}
+								key={id}
+							>
+								<h2 className="title">{title}</h2>
+							</li>
+						);
+					})}
+				</ul>
 			</div>
 		);
 	}
