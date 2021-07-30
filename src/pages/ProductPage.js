@@ -8,6 +8,7 @@ class ProductPage extends Component {
     this.state = {
       products: [],
       currentProduct: null,
+      recentView: [],
     };
   }
 
@@ -62,7 +63,18 @@ class ProductPage extends Component {
       currentProduct: targetProduct,
     });
   }
-
+  updateRecentView(id) {
+    const newRecentView = this.state.recentView.filter(
+      (productId) => productId !== id
+    );
+    newRecentView.unshift(id);
+    this.setState({
+      recentView: newRecentView,
+    });
+    setTimeout(() => {
+      console.log(this.state.recentView);
+    }, -1);
+  }
   render() {
     if (!this.state.currentProduct) {
       return <div></div>;
@@ -105,7 +117,10 @@ class ProductPage extends Component {
             return (
               <li
                 className="product"
-                onClick={() => this.getProductDetail(id)}
+                onClick={() => {
+                  this.getProductDetail(id);
+                  this.updateRecentView(id);
+                }}
                 key={id}
               >
                 <h2 className="title">{title}</h2>
