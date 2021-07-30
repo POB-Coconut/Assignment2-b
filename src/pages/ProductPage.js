@@ -1,113 +1,118 @@
 import React, { Component } from "react";
-import "./temp.css";
-
-const storageData = JSON.parse(localStorage.getItem("data")) || [];
-
-function getBrand(props) {
-  const map = new Map();
-  props.forEach((element) => {
-    map.set(element.brand, true);
-  });
-
-  return map;
-}
-
-function getData(brand) {
-  const data = storageData.filter((item) => {
-    return brand.get(item.brand);
-  });
-  return data;
-}
+import { v4 as uuidv4 } from "uuid";
+import "./Product.css";
 
 class ProductPage extends Component {
-  constructor(props) {
-    super(props);
-    this.handleClick = this.handleClick.bind(this);
+  constructor() {
+    super();
     this.state = {
-      data: storageData,
-      brand: getBrand(storageData),
+      products: [],
+      currentProduct: null,
     };
   }
-  handleClick(name) {
-    this.state.brand.set(name, !this.state.brand.get(name));
-    this.setState(() => {
-      return { ...this.state, data: getData(this.state.brand) };
+
+  async componentDidMount() {
+    try {
+      const res = await fetch("http://localhost:3000/data/productData.json");
+      const data = await res.json();
+      this.setState({
+        products: data.map((product) => {
+          product.id = uuidv4();
+          product.isNotInterested = false;
+          return product;
+        }),
+      });
+      this.setState({
+        currentProduct: this.state.products[0],
+      });
+      if (!res.ok) {
+        throw new Error("error");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  shuffleProduct() {
+    const end = this.state.products.length - 1;
+    const randomNumber = Math.floor(Math.random() * (end - 0) + 0);
+    this.setState({
+      currentProduct: this.state.products[randomNumber],
     });
   }
 
-  componentDidMount() {
-    /*
-    localStorage.setItem(
-      "data",
-      JSON.stringify([
-        {
-          title: "거의새것 정품 구찌 보스턴백 토트백",
-          brand: "구찌",
-          price: 380000,
-          interest: false,
-          id: 1,
-          date: [new Date(2021, 6, 2)],
-        },
-        {
-          title: "중고 루이비통 장지갑 백화점 풀구성",
-          brand: "루이비통",
-          price: 400000,
-          interest: false,
-          id: 2,
-          date: [new Date(2021, 6, 3)],
-        },
-        {
-          title: "중고 스톤아일랜드 쉐도우와팬 봄니트 95",
-          brand: "스톤아일랜드",
-          price: 350000,
-          interest: false,
-          id: 3,
-          date: [new Date(2021, 6, 1)],
-        },
-        {
-          title: "구찌 스트랩 클러치 판매합니다.",
-          brand: "구찌",
-          price: 30000,
-          interest: false,
-          id: 4,
-          date: [new Date(2021, 6, 6)],
-        },
-      ])
+  setIsNotInterested(id) {
+    const newProducts = this.state.products.map((product) => {
+      if (product.id === id) {
+        console.log(id, product.id);
+        product.isNotInterested = true;
+      }
+      return product;
+    });
+    this.setState({
+      products: newProducts,
+    });
+    console.log(this.state.products);
+  }
+  getProductDetail(id) {
+    const targetProduct = this.state.products.find(
+      (product) => product.id === id
     );
-    let data = localStorage.getItem("data");
-    */
-    // console.log(getData(this.state));
+    this.setState({
+      currentProduct: targetProduct,
+    });
   }
 
   render() {
+    if (!this.state.currentProduct) {
+      return <div></div>;
+    }
     return (
-      <div>
-        <p>ProductPage</p>
-        {Array.from(this.state.brand.entries()).map(([name, isChecked]) => (
-          <div key={name}>
-            <label>
-              {name}
-              <input
-                type="checkbox"
-                defaultChecked={isChecked}
-                onChange={() => {
-                  this.handleClick(name);
-                }}
-              />
-            </label>
-          </div>
-        ))}
-        <div className="data">
-          {this.state.data.map((i) => (
-            <ul key={i.id}>
-              <li>{i.title}</li>
-              <li>{i.brand}</li>
-              <li>{i.price}</li>
-              <li>{i.id}</li>
-              <li>{i.date}</li>
-            </ul>
-          ))}
+      <div className="container">
+        <div className="product-detail">
+          <h2>{this.state.currentProduct.title}</h2>
+          <h2>{this.state.currentProduct.brand}</h2>
+          <h2>{this.state.currentProduct.price}</h2>
+          <button
+            onClick={() => {
+              this.setIsNotInterested(this.state.currentProduct.id);
+              this.shuffleProduct();
+            }}
+          >
+            관심없음
+          </button>
+          <button
+            onClick={() => {
+              this.shuffleProduct();
+            }}
+          >
+            랜덤상품조회
+          </button>
         </div>
+        <ul className="products">
+          {this.state.products.map((product) => {
+            const { title, id, isNotInterested } = product;
+
+            if (isNotInterested) {
+              console.log(isNotInterested);
+              return (
+                <li className="product not-interested" key={id}>
+                  <h2 className="title">{title}</h2>
+                </li>
+              );
+            }
+
+            return (
+              <li
+                className="product"
+                onClick={() => this.getProductDetail(id)}
+                key={id}
+              >
+                <h2 className="title">{title}</h2>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     );
   }
