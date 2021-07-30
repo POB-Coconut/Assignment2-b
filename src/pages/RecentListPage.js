@@ -43,6 +43,22 @@ class RecentListPage extends Component {
     }
   }
 
+  onSortRecent() {
+    const { recentToggle, recentData } = this.state;
+
+    if (recentToggle) {
+      this.setState({
+        recentToggle: !recentToggle,
+        recentData: recentData.sort((a, b) => a.date - b.date),
+      });
+    } else {
+      this.setState({
+        recentToggle: !recentToggle,
+        recentData: recentData.sort((a, b) => b.date - a.date),
+      });
+    }
+  }
+
   render() {
     const { recentData } = this.state;
     return (
@@ -63,7 +79,7 @@ class RecentListPage extends Component {
           id="check interest"
           onChange={(e) => this.onInterset(e.target.checked)}
         />
-        {/* <button onClick={this.onSortRecent}>최근 조회 순</button> */}
+        <button onClick={() => this.onSortRecent()}>최근 조회 순</button>
         <button onClick={() => this.onSortCheap()}>가격 낮은 순</button>
       </div>
     );
