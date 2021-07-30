@@ -7,6 +7,8 @@ class RecentListPage extends Component {
     this.state = {
       recentData: JSON.parse(localStorage.getItem("data")),
       tempData: [],
+      priceToggle: true,
+      recentToggle: true,
     };
   }
 
@@ -21,6 +23,22 @@ class RecentListPage extends Component {
     } else {
       this.setState({
         recentData: [...tempData],
+      });
+    }
+  }
+
+  onSortCheap() {
+    const { priceToggle, recentData } = this.state;
+
+    if (priceToggle) {
+      this.setState({
+        priceToggle: !priceToggle,
+        recentData: recentData.sort((a, b) => a.price - b.price),
+      });
+    } else {
+      this.setState({
+        priceToggle: !priceToggle,
+        recentData: recentData.sort((a, b) => b.price - a.price),
       });
     }
   }
@@ -45,6 +63,8 @@ class RecentListPage extends Component {
           id="check interest"
           onChange={(e) => this.onInterset(e.target.checked)}
         />
+        {/* <button onClick={this.onSortRecent}>최근 조회 순</button> */}
+        <button onClick={() => this.onSortCheap()}>가격 낮은 순</button>
       </div>
     );
   }
