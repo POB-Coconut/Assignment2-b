@@ -8,7 +8,7 @@ class ProductPage extends Component {
     this.state = {
       products: [],
       currentProduct: null,
-      recentView: [],
+      recentViews: [],
     };
   }
 
@@ -35,26 +35,30 @@ class ProductPage extends Component {
   }
 
   shuffleProduct() {
-    const end = this.state.products.length - 1;
-    const randomNumber = Math.floor(Math.random() * (end - 0) + 0);
+    const newProducts = this.state.products.filter(
+      (product) => product.isNotInterested === false
+    );
+    const randomNumber = Math.floor(
+      Math.random() * (newProducts.length - 0) + 0
+    );
+
     this.setState({
-      currentProduct: this.state.products[randomNumber],
+      currentProduct: newProducts[randomNumber],
     });
   }
 
   setIsNotInterested(id) {
     const newProducts = this.state.products.map((product) => {
-      if (product.id === id) {
-        console.log(id, product.id);
-        product.isNotInterested = true;
-      }
+      if (product.id === id) product.isNotInterested = true;
+
       return product;
     });
+
     this.setState({
       products: newProducts,
     });
-    console.log(this.state.products);
   }
+
   getProductDetail(id) {
     const targetProduct = this.state.products.find(
       (product) => product.id === id
@@ -63,22 +67,26 @@ class ProductPage extends Component {
       currentProduct: targetProduct,
     });
   }
-  updateRecentView(id) {
-    const newRecentView = this.state.recentView.filter(
-      (productId) => productId !== id
+
+  updateRecentViews(id) {
+    const newRecentViews = this.state.recentViews.filter(
+      (product) => product.id !== id
     );
-    newRecentView.unshift(id);
+    const targetProduct = this.state.products.find(
+      (product) => product.id === id
+    );
+
+    newRecentViews.unshift(targetProduct);
+
+    console.log(this.state.recentViews);
     this.setState({
-      recentView: newRecentView,
+      recentViews: newRecentViews,
     });
-    setTimeout(() => {
-      console.log(this.state.recentView);
-    }, -1);
   }
+
   render() {
-    if (!this.state.currentProduct) {
-      return <div></div>;
-    }
+    if (!this.state.currentProduct) return <div></div>;
+
     return (
       <div className="container">
         <div className="product-detail">
@@ -106,7 +114,6 @@ class ProductPage extends Component {
             const { title, id, isNotInterested } = product;
 
             if (isNotInterested) {
-              console.log(isNotInterested);
               return (
                 <li className="product not-interested" key={id}>
                   <h2 className="title">{title}</h2>
@@ -119,7 +126,7 @@ class ProductPage extends Component {
                 className="product"
                 onClick={() => {
                   this.getProductDetail(id);
-                  this.updateRecentView(id);
+                  this.updateRecentViews(id);
                 }}
                 key={id}
               >
