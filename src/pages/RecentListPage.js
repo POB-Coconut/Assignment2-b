@@ -26,7 +26,6 @@ class RecentListPage extends Component {
     this.state = {
       data: storageData,
       brand: getBrand(storageData),
-      recentData: JSON.parse(localStorage.getItem("data")),
       tempData: [],
       priceToggle: true,
       recentToggle: true,
@@ -40,98 +39,100 @@ class RecentListPage extends Component {
   }
 
   onInterset(checked) {
-    const { recentData, tempData } = this.state;
+    const { data, tempData } = this.state;
     // checked === true면 관심 없는 체크박스를 체크한 것
     if (checked) {
       this.setState({
-        tempData: [...recentData],
-        recentData: recentData.filter((data) => !data.interest),
+        tempData: [...data],
+        data: data.filter((data) => !data.interest),
       });
     } else {
       this.setState({
-        recentData: [...tempData],
+        data: [...tempData],
       });
     }
+    this.setState(() => {
+      return { ...this.state, data: getData(this.state.brand) };
+    });
+    console.log(this.state, checked);
   }
 
   onSortCheap() {
-    const { priceToggle, recentData } = this.state;
+    const { priceToggle, data } = this.state;
 
     if (priceToggle) {
       this.setState({
         priceToggle: !priceToggle,
-        recentData: recentData.sort((a, b) => a.price - b.price),
+        data: data.sort((a, b) => a.price - b.price),
       });
     } else {
       this.setState({
         priceToggle: !priceToggle,
-        recentData: recentData.sort((a, b) => b.price - a.price),
+        data: data.sort((a, b) => b.price - a.price),
       });
     }
   }
 
   onSortRecent() {
-    const { recentToggle, recentData } = this.state;
+    const { recentToggle, data } = this.state;
 
     if (recentToggle) {
       this.setState({
         recentToggle: !recentToggle,
-        recentData: recentData.sort((a, b) => a.date - b.date),
+        data: data.sort((a, b) => new Date(a.date) - new Date(b.date)),
       });
     } else {
       this.setState({
         recentToggle: !recentToggle,
-        recentData: recentData.sort((a, b) => b.date - a.date),
+        data: data.sort((a, b) => new Date(b.date) - new Date(a.date)),
       });
     }
   }
 
   componentDidMount() {
-    /*
-    localStorage.setItem(
-      "data",
-      JSON.stringify([
-        {
-          title: "거의새것 정품 구찌 보스턴백 토트백",
-          brand: "구찌",
-          price: 380000,
-          interest: false,
-          id: 1,
-          date: [new Date(2021, 6, 2)],
-        },
-        {
-          title: "중고 루이비통 장지갑 백화점 풀구성",
-          brand: "루이비통",
-          price: 400000,
-          interest: false,
-          id: 2,
-          date: [new Date(2021, 6, 3)],
-        },
-        {
-          title: "중고 스톤아일랜드 쉐도우와팬 봄니트 95",
-          brand: "스톤아일랜드",
-          price: 350000,
-          interest: false,
-          id: 3,
-          date: [new Date(2021, 6, 1)],
-        },
-        {
-          title: "구찌 스트랩 클러치 판매합니다.",
-          brand: "구찌",
-          price: 30000,
-          interest: false,
-          id: 4,
-          date: [new Date(2021, 6, 6)],
-        },
-      ])
-    );
-    let data = localStorage.getItem("data");
-    */
-    // console.log(getData(this.state));
+    // localStorage.setItem(
+    //   "data",
+    //   JSON.stringify([
+    //     {
+    //       title: "거의새것 정품 구찌 보스턴백 토트백",
+    //       brand: "구찌",
+    //       price: 380000,
+    //       interest: false,
+    //       id: 1,
+    //       date: new Date(2021, 6, 2),
+    //     },
+    //     {
+    //       title: "중고 루이비통 장지갑 백화점 풀구성",
+    //       brand: "루이비통",
+    //       price: 400000,
+    //       interest: false,
+    //       id: 2,
+    //       date: new Date(2021, 6, 3),
+    //     },
+    //     {
+    //       title: "중고 스톤아일랜드 쉐도우와팬 봄니트 95",
+    //       brand: "스톤아일랜드",
+    //       price: 350000,
+    //       interest: false,
+    //       id: 3,
+    //       date: new Date(2021, 6, 1),
+    //     },
+    //     {
+    //       title: "구찌 스트랩 클러치 판매합니다.",
+    //       brand: "구찌",
+    //       price: 30000,
+    //       interest: false,
+    //       id: 4,
+    //       date: new Date(2021, 6, 6),
+    //     },
+    //   ])
+    // );
+    // let data = localStorage.getItem("data");
+    console.log(this.state);
   }
 
   render() {
-    const { recentData } = this.state;
+    const { data } = this.state;
     return (
       <div>
         <p>ProductPage</p>
