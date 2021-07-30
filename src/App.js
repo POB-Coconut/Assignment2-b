@@ -8,7 +8,7 @@ class App extends Component {
     return (
       <Switch>
         <Route exact path={["/", "/product"]} component={ProductPage} />
-        <Route exact path="/recentList" component={RecentListPage} />
+        <Route path="/recentList" component={RecentListPage} />
       </Switch>
     );
   }
