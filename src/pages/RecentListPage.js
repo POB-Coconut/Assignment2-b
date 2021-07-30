@@ -40,20 +40,19 @@ class RecentListPage extends Component {
 
   onInterset(checked) {
     const { data, tempData } = this.state;
-    // checked === true면 관심 없는 체크박스를 체크한 것
     if (checked) {
       this.setState({
         tempData: [...data],
-        data: data.filter((data) => !data.interest),
+        data: data.filter((v) => v.interest),
       });
     } else {
       this.setState({
         data: [...tempData],
       });
     }
-    this.setState(() => {
-      return { ...this.state, data: getData(this.state.brand) };
-    });
+    // this.setState(() => {
+    //   return { ...this.state, data: getData(this.state.brand) };
+    // });
     console.log(this.state, checked);
   }
 
@@ -89,50 +88,57 @@ class RecentListPage extends Component {
     }
   }
 
-  componentDidMount() {
-    // localStorage.setItem(
-    //   "data",
-    //   JSON.stringify([
-    //     {
-    //       title: "거의새것 정품 구찌 보스턴백 토트백",
-    //       brand: "구찌",
-    //       price: 380000,
-    //       interest: false,
-    //       id: 1,
-    //       date: new Date(2021, 6, 2),
-    //     },
-    //     {
-    //       title: "중고 루이비통 장지갑 백화점 풀구성",
-    //       brand: "루이비통",
-    //       price: 400000,
-    //       interest: false,
-    //       id: 2,
-    //       date: new Date(2021, 6, 3),
-    //     },
-    //     {
-    //       title: "중고 스톤아일랜드 쉐도우와팬 봄니트 95",
-    //       brand: "스톤아일랜드",
-    //       price: 350000,
-    //       interest: false,
-    //       id: 3,
-    //       date: new Date(2021, 6, 1),
-    //     },
-    //     {
-    //       title: "구찌 스트랩 클러치 판매합니다.",
-    //       brand: "구찌",
-    //       price: 30000,
-    //       interest: false,
-    //       id: 4,
-    //       date: new Date(2021, 6, 6),
-    //     },
-    //   ])
-    // );
-    // let data = localStorage.getItem("data");
-    console.log(this.state);
+  onShowDetail(interest) {
+    // interest가 true면 관심 있는 것 -> 페이지 이동
+    if (interest) {
+      this.props.history.push("/");
+    } else {
+      // interest가 false면 관심 없음 -> alert('접근금지')
+      alert("관심없는 제품입니다.");
+    }
   }
 
+  // componentDidMount() {
+  //   localStorage.setItem(
+  //     "data",
+  //     JSON.stringify([
+  //       {
+  //         title: "거의새것 정품 구찌 보스턴백 토트백",
+  //         brand: "구찌",
+  //         price: 380000,
+  //         interest: false,
+  //         id: 1,
+  //         date: new Date(2021, 6, 2),
+  //       },
+  //       {
+  //         title: "중고 루이비통 장지갑 백화점 풀구성",
+  //         brand: "루이비통",
+  //         price: 400000,
+  //         interest: true,
+  //         id: 2,
+  //         date: new Date(2021, 6, 3),
+  //       },
+  //       {
+  //         title: "중고 스톤아일랜드 쉐도우와팬 봄니트 95",
+  //         brand: "스톤아일랜드",
+  //         price: 350000,
+  //         interest: false,
+  //         id: 3,
+  //         date: new Date(2021, 6, 1),
+  //       },
+  //       {
+  //         title: "구찌 스트랩 클러치 판매합니다.",
+  //         brand: "구찌",
+  //         price: 30000,
+  //         interest: true,
+  //         id: 4,
+  //         date: new Date(2021, 6, 6),
+  //       },
+  //     ])
+  //   );
+  // }
+
   render() {
-    const { data } = this.state;
     return (
       <div>
         <p>ProductPage</p>
@@ -160,7 +166,7 @@ class RecentListPage extends Component {
         <button onClick={() => this.onSortCheap()}>가격 낮은 순</button>
         <div className="data">
           {this.state.data.map((i) => (
-            <ul key={i.id}>
+            <ul key={i.id} onClick={() => this.onShowDetail(i.interest)}>
               <li>{i.title}</li>
               <li>{i.brand}</li>
               <li>{i.price}</li>
