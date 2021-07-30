@@ -12,6 +12,11 @@ class ProductPage extends Component {
     };
   }
 
+  setLocalStorage(data) {
+    localStorage.removeItem('data');
+    localStorage.setItem('data', JSON.stringify(data));
+  }
+
   async componentDidMount() {
     try {
       const res = await fetch('http://localhost:3000/data/productData.json');
@@ -79,10 +84,11 @@ class ProductPage extends Component {
 
     newRecentViews.unshift(targetProduct);
 
-    console.log(this.state.recentViews);
     this.setState({
       recentViews: newRecentViews,
     });
+
+    this.setLocalStorage(newRecentViews);
   }
 
   render() {
