@@ -1,6 +1,6 @@
 .container {
 	display: flex;
-	justify-content: center;
+	justify-content: flex-end;
 }
 
 .product {
@@ -9,7 +9,12 @@
 	padding: 10px;
 	border-radius: 10px;
 	line-height: 1.5rem;
+	cursor: pointer;
 }
+.not-interested {
+	cursor: not-allowed;
+}
+
 .random {
 	margin: 10px;
 	height: 30px;
