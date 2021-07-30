@@ -141,39 +141,59 @@ class RecentListPage extends Component {
   render() {
     return (
       <div>
-        <p>ProductPage</p>
-        {Array.from(this.state.brand.entries()).map(([name, isChecked]) => (
-          <div key={name}>
-            <label>
-              {name}
-              <input
-                type="checkbox"
-                defaultChecked={isChecked}
-                onChange={() => {
-                  this.handleClick(name);
-                }}
-              />
-            </label>
+        <div className="header">
+          <div className="filter">
+            <span>브랜드: </span>
+            {Array.from(this.state.brand.entries()).map(([name, isChecked]) => (
+              <label
+                className={"card " + (isChecked ? "clicked" : "")}
+                key={name}
+              >
+                {name}
+                <input
+                  type="checkbox"
+                  defaultChecked={isChecked}
+                  onChange={() => {
+                    this.handleClick(name);
+                  }}
+                />
+              </label>
+            ))}
           </div>
-        ))}
-        <label htmlFor="check interest">관심 없는 상품 제거하기</label>
-        <input
-          type="checkbox"
-          id="check interest"
-          onChange={(e) => this.onInterset(e.target.checked)}
-        />
-        <button onClick={() => this.onSortRecent()}>최근 조회 순</button>
-        <button onClick={() => this.onSortCheap()}>가격 낮은 순</button>
-        <div className="data">
-          {this.state.data.map((i) => (
-            <ul key={i.id} onClick={() => this.onShowDetail(i.interest)}>
-              <li>{i.title}</li>
-              <li>{i.brand}</li>
-              <li>{i.price}</li>
-              <li>{i.id}</li>
-              <li>{i.date}</li>
-            </ul>
-          ))}
+          <label>
+            관심 없는 상품 제거하기
+            <input
+              type="checkbox"
+              onChange={(e) => this.onInterset(e.target.checked)}
+            />
+          </label>
+          <button onClick={() => this.onSortRecent()}>최근 조회 순</button>
+          <button onClick={() => this.onSortCheap()}>가격 낮은 순</button>
+        </div>
+        <div className="recent-container">
+          <div className="data">
+            {this.state.data.map((i) => {
+              const date = new Date(i.date);
+              const hour = date.getHours();
+              const min = date.getMinutes();
+              return (
+                <dl
+                  className="card"
+                  key={i.id}
+                  onClick={() => this.onShowDetail(i.interest)}
+                >
+                  {/* <dd className="card-id">{i.id}</dd> */}
+                  <dd className="card-brand">{i.brand}</dd>
+                  <dd className="card-title">{i.title}</dd>
+                  <dd className="card-price">\{i.price}</dd>
+                  <dd className="card-date">
+                    <span>접속 로그:</span>
+                    <span>{`${hour}시 ${min}분`}</span>
+                  </dd>
+                </dl>
+              );
+            })}
+          </div>
         </div>
       </div>
     );

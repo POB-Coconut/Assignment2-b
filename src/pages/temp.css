@@ -1,8 +1,83 @@
-ul {
-  /* background-color: red; */
-  margin: 10px;
-  border: 1px solid;
-  min-height: 100px;
+.recent-container {
+  min-height: 100vh;
+  background: #fafafa;
 }
-li {
+.header {
+  margin: 10px 50px;
+  background: #fff;
+}
+
+.filter {
+  display: flex;
+}
+
+.filter span {
+  padding: 10px;
+  margin: 10px;
+  font-size: 1.5em;
+}
+.filter label {
+  border: 1px solid #e9ecef;
+  border-radius: 3px;
+  padding: 10px;
+  margin: 10px;
+  font-size: 1.5em;
+}
+
+.filter input {
+  display: none;
+}
+.filter input:checked {
+  background: red;
+}
+.data {
+  padding: 20px 50px;
+  height: 100%;
+}
+
+.card {
+  cursor: pointer;
+  transition-duration: 0.2s;
+  max-width: 600px;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+.card:hover {
+  max-width: 600px;
+  box-shadow: 0 0.8rem 1.3rem rgba(0, 0, 0, 0.3);
+}
+.card.clicked {
+  /* color: red; */
+  max-width: 600px;
+  box-shadow: inset 0 0.2rem 0.5rem rgba(0, 0, 0, 0.15);
+}
+
+dl.card {
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  padding: 20px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  background: #fff;
+}
+.card dd {
+  margin-bottom: 10px;
+}
+.card-id {
+}
+.card-brand {
+  display: inline-block;
+  padding: 5px;
+  font-size: small;
+  color: #fff;
+  background-color: #ababab;
+  border-radius: 3px;
+}
+.card-title {
+  font-size: smaller;
+  font-weight: bold;
+}
+.card-price {
+  font-weight: bold;
+}
+.card-date {
 }
