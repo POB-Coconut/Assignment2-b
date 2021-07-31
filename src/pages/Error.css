@@ -1,0 +1,27 @@
+.error-page {
+  padding: 3rem;
+  text-align: center;
+}
+
+.error-page h1 {
+  font-size: 5rem;
+  margin: 5rem 0;
+}
+
+.error-page p {
+  font-size: 2rem;
+  margin-bottom: 5rem;
+}
+
+.error-page--btn {
+  display: inline-flex;
+  align-items: center;
+  color: #f6f6f6;
+  background-color: aquamarine;
+  border-radius: 5px;
+  padding: 1rem 2rem;
+}
+
+.error-page--btn span {
+  font-size: 2rem;
+}

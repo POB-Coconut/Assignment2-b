@@ -1,0 +1,114 @@
+body {
+  background: #e0e5ec;
+}
+.recent-container {
+  margin: 0 auto;
+  max-width: 1200px;
+  min-height: 100vh;
+  padding: 10px 60px;
+}
+.inline-block {
+  font-size: x-large;
+  display: inline-block;
+}
+.header {
+  max-width: 1200px;
+  margin-top: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 9px 9px 16px rgba(163, 177, 198, 0.6),
+    -9px -9px 16px rgba(255, 255, 255, 0.5);
+}
+.option {
+  display: flex;
+  align-items: center;
+}
+
+.filter {
+  display: flex;
+  align-items: center;
+}
+
+.header span {
+  padding: 10px;
+  margin: 10px;
+}
+.header .card {
+  /* border: 1px solid rgba(255, 255, 255, 0.2); */
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin: 10px;
+}
+
+.header input {
+  display: none;
+}
+.header input:checked {
+  background: red;
+}
+.data {
+  margin-top: 50px;
+  display: grid;
+  /* gap: 10px 20px; */
+  grid-template-columns: 1fr;
+  grid-gap: 10px;
+  height: 100%;
+}
+@media (min-width: 800px) {
+  .data {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.card {
+  cursor: pointer;
+  transition-duration: 0.2s;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 9px 9px 16px rgba(163, 177, 198, 0.6),
+    -9px -9px 16px rgba(255, 255, 255, 0.5);
+}
+.card:hover {
+  box-shadow: 15px 15px 22px rgb(163, 177, 198),
+    -15px -15px 22px rgb(255, 255, 255);
+}
+.card.clicked {
+  /* color: red; */
+  box-shadow: 9px 9px 16px rgba(163, 177, 198, 0.6),
+    -9px -9px 16px rgba(255, 255, 255, 0.5),
+    inset 3px 3px 7px rgba(136, 165, 191, 0.48), inset -3px -3px 7px #ffffff;
+}
+
+dl.card {
+  margin: 10px;
+  flex: 1;
+  border-radius: 10px;
+  /* width: 100%; */
+  /* border: 1px solid #e9ecef; */
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.card dd {
+  margin-bottom: 10px;
+}
+.card-id {
+  display: inline-block;
+  margin-right: 5px;
+}
+.card-brand {
+  display: inline-block;
+  padding: 5px;
+  font-size: small;
+  color: #fff;
+  background-color: #ababab;
+  border-radius: 3px;
+}
+.card-title {
+  font-size: smaller;
+  font-weight: bold;
+}
+.card-price {
+  font-weight: bold;
+}
+.card-date {
+}
