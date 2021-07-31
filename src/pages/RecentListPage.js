@@ -1,46 +1,31 @@
 import React, { Component } from "react";
 import "./temp.css";
-
-const storageData = JSON.parse(localStorage.getItem("data")) || [];
-
-// function removeStorage() {
-//   localStorage.clear();
-// }
-
-function getBrand(props) {
-  const map = new Map();
-  props.forEach((element) => {
-    map.set(element.brand, true);
-  });
-
-  return map;
-}
-
-function getData(brand) {
-  const data = storageData.filter((item) => {
-    return brand.get(item.brand);
-  });
-
-  return data;
-}
+import { getBrand } from "utils/data/getBrand";
+import { getData } from "utils/data/getData";
+import { getStorage } from "utils/storage/getStorage";
 
 class RecentListPage extends Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
+    this.onSortBrand = this.onSortBrand.bind(this);
+    this.onSortBrand = this.onSortBrand.bind(this);
+    this.onInterset = this.onInterset.bind(this);
+    this.onSortCheap = this.onSortCheap.bind(this);
+    this.onSortRecent = this.onSortRecent.bind(this);
+    this.goShowDetail = this.goShowDetail.bind(this);
     this.state = {
-      data: storageData,
-      brand: getBrand(storageData),
+      data: getStorage(),
+      brand: getBrand(getStorage()),
       originData: [],
       priceSortToggle: false,
       recentSortToggle: false,
     };
   }
 
-  handleClick(name, checked) {
-    const { brand } = this.state;
+  onSortBrand(name, checked) {
+    const { brand, data } = this.state;
 
-    brand.set(name, !brand.get(name));
+    brand.set(name, !brand.get(name, data));
     this.setState({
       ...this.state,
       data: getData(brand),
@@ -107,7 +92,7 @@ class RecentListPage extends Component {
     }
   }
 
-  onShowDetail(isNotInterested) {
+  goShowDetail(isNotInterested) {
     // isNotInterested가 true면 관심 있는 것 -> 페이지 이동
     if (!isNotInterested) {
       this.props.history.push("/");
@@ -129,7 +114,7 @@ class RecentListPage extends Component {
                 type="checkbox"
                 defaultChecked={isChecked}
                 onChange={(e) => {
-                  this.handleClick(name, e.target.checked);
+                  this.onSortBrand(name, e.target.checked);
                 }}
               />
             </label>
@@ -145,7 +130,7 @@ class RecentListPage extends Component {
         <button onClick={() => this.onSortCheap()}>가격 낮은 순</button>
         <div className="data">
           {this.state.data.map((i) => (
-            <ul key={i.id} onClick={() => this.onShowDetail(i.isNotInterested)}>
+            <ul key={i.id} onClick={() => this.goShowDetail(i.isNotInterested)}>
               <li>{i.title}</li>
               <li>{i.brand}</li>
               <li>{i.price}</li>
