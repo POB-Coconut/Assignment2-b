@@ -107,8 +107,8 @@ class ProductPage extends Component {
   }
 
   setLocalStorage(data) {
-    localStorage.removeItem('data');
-    localStorage.setItem('data', JSON.stringify(data));
+    localStorage.removeItem("data");
+    localStorage.setItem("data", JSON.stringify(data));
   }
 
   setPathId() {
@@ -132,7 +132,7 @@ class ProductPage extends Component {
     if (this.state.isLoading || !this.state.currentProduct) return null;
 
     return (
-      <div className='container'>
+      <div className="container">
         <ProductDetail
           key={this.state.currentProduct.id}
           curProduct={this.state.currentProduct}
@@ -141,7 +141,7 @@ class ProductPage extends Component {
           updateRecentViews={this.updateRecentViews}
         />
 
-        <aside className='products-list'>
+        <aside className="products-list">
           <ProductsList
             paginatedProducts={this.state.paginatedProducts}
             getProductDetail={this.getProductDetail}

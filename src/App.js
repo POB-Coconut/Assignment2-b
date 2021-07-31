@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
-import { ProductPage, RecentListPage, ErrorPage } from 'pages';
+import React, { Component } from "react";
+import { Route, Switch } from "react-router-dom";
+import { ProductPage, RecentListPage, ErrorPage } from "pages";
 
 class App extends Component {
   render() {
