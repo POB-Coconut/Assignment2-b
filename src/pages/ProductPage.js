@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
-import './Product.css';
-import { DEFAULT_PAGE, ERROR_MSG, BASE_URL } from 'utils/config';
 import { ProductsList, ProductDetail, PageButtons } from 'components';
+import './Product.css';
 import { paginate } from 'utils/paginate';
+import {
+  DEFAULT_PAGE,
+  ERROR_MSG,
+  BASE_URL,
+  DEFAULT_PATH_ID,
+} from 'utils/config';
 
 class ProductPage extends Component {
   constructor() {
@@ -14,6 +19,7 @@ class ProductPage extends Component {
       recentViews: [],
       page: DEFAULT_PAGE,
       paginatedProducts: [],
+      pathId: DEFAULT_PATH_ID,
     };
 
     this.getProductDetail = this.getProductDetail.bind(this);
@@ -39,13 +45,15 @@ class ProductPage extends Component {
         return product;
       });
 
+      this.setPathId();
+      const pathId = this.state.pathId - 1 || 0;
+
       this.setState({ products });
       this.setState({
-        currentProduct: products[0],
+        currentProduct: products[pathId],
         isLoading: false,
       });
       this.updatePaginatedProducts();
-      //   this.updatePaginatedProducts(products, this.state.page);
     } catch (err) {
       this.setState({ isLoading: false });
       console.error(err);
@@ -78,6 +86,7 @@ class ProductPage extends Component {
       (product) => product.id === id
     );
 
+    this.setPathId();
     this.setState({ currentProduct: targetProduct });
   }
 
@@ -89,9 +98,9 @@ class ProductPage extends Component {
       (product) => product.id === id
     );
     const date = new Date();
-    const recentPrduct = { ...targetProduct, date };
+    const recentViewProduct = { ...targetProduct, date };
 
-    newRecentViews.unshift(recentPrduct);
+    newRecentViews.unshift(recentViewProduct);
 
     this.setState({ recentViews: newRecentViews });
     this.setLocalStorage(newRecentViews);
@@ -100,6 +109,12 @@ class ProductPage extends Component {
   setLocalStorage(data) {
     localStorage.removeItem('data');
     localStorage.setItem('data', JSON.stringify(data));
+  }
+
+  setPathId() {
+    const pathId = +window.location.pathname.split('/')[2];
+
+    this.setState({ pathId });
   }
 
   setPage(index) {
@@ -123,6 +138,7 @@ class ProductPage extends Component {
           curProduct={this.state.currentProduct}
           setIsNotInterested={this.setIsNotInterested}
           shuffleProduct={this.shuffleProduct}
+          updateRecentViews={this.updateRecentViews}
         />
 
         <aside className='products-list'>
