@@ -10,7 +10,7 @@ export default class ProductsList extends Component {
 
           if (isNotInterested) {
             return (
-              <li key={id} className='products-list__product'>
+              <li key={id} className='products-list__product not-interested'>
                 <h2>{title}</h2>
               </li>
             );

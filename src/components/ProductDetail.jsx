@@ -11,8 +11,8 @@ export default class ProductDetail extends Component {
       <main className='product-detail'>
         <div className='product-detail__about'>
           <h2>{this.product.title}</h2>
-          <h3>{this.product.brand}</h3>
-          <p>{this.product.price}</p>
+          <h3>브랜드: {this.product.brand}</h3>
+          <p>가격: {this.product.price}</p>
         </div>
 
         <button
