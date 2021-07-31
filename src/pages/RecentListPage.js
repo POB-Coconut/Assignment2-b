@@ -9,30 +9,31 @@ class RecentListPage extends Component {
     super(props);
     this.onSortBrand = this.onSortBrand.bind(this);
     this.onSortBrand = this.onSortBrand.bind(this);
-    this.onInterset = this.onInterset.bind(this);
+    this.onSortInterest = this.onSortInterest.bind(this);
     this.onSortCheap = this.onSortCheap.bind(this);
     this.onSortRecent = this.onSortRecent.bind(this);
     this.goShowDetail = this.goShowDetail.bind(this);
     this.state = {
       data: getStorage(),
       brand: getBrand(getStorage()),
-      originData: [],
+      originData: getStorage(),
       priceSortToggle: false,
       recentSortToggle: false,
     };
+    this.interestCheckbox = React.createRef();
   }
 
-  onSortBrand(name, checked) {
-    const { brand, data } = this.state;
-
+  onSortBrand(name) {
+    const { brand, data, originData } = this.state;
+    this.interestCheckbox.current.checked = false;
     brand.set(name, !brand.get(name, data));
     this.setState({
       ...this.state,
-      data: getData(brand),
+      data: getData(brand, originData),
     });
   }
 
-  onInterset(checked) {
+  onSortInterest(checked) {
     const { data, originData } = this.state;
     if (checked) {
       this.setState({
@@ -49,7 +50,7 @@ class RecentListPage extends Component {
   }
 
   onSortCheap() {
-    const { priceSortToggle, originData, data } = this.state;
+    const { data, originData, priceSortToggle } = this.state;
 
     if (priceSortToggle) {
       this.setState({
@@ -69,7 +70,7 @@ class RecentListPage extends Component {
   }
 
   onSortRecent() {
-    const { recentSortToggle, originData, data } = this.state;
+    const { data, originData, recentSortToggle } = this.state;
 
     if (recentSortToggle) {
       this.setState({
@@ -93,11 +94,9 @@ class RecentListPage extends Component {
   }
 
   goShowDetail(isNotInterested) {
-    // isNotInterested가 true면 관심 있는 것 -> 페이지 이동
     if (!isNotInterested) {
       this.props.history.push("/");
     } else {
-      // isNotInterested가 false면 관심 없음 -> alert('접근금지')
       alert("관심없는 제품입니다.");
     }
   }
@@ -120,11 +119,12 @@ class RecentListPage extends Component {
             </label>
           </div>
         ))}
-        <label htmlFor="check isNotInterested">관심 없는 상품 제거하기</label>
+        <label htmlFor="check interest">관심 없는 상품 제거하기</label>
         <input
           type="checkbox"
-          id="check isNotInterested"
-          onChange={(e) => this.onInterset(e.target.checked)}
+          ref={this.interestCheckbox}
+          id="check interest"
+          onChange={(e) => this.onSortInterest(e.target.checked)}
         />
         <button onClick={() => this.onSortRecent()}>최근 조회 순</button>
         <button onClick={() => this.onSortCheap()}>가격 낮은 순</button>
