@@ -152,3 +152,14 @@ button {
     -9px -9px 16px rgba(255, 255, 255, 0.5),
     inset 3px 3px 7px rgba(136, 165, 191, 0.48), inset -3px -3px 7px #ffffff;
 }
+
+nav {
+  display: flex;
+  justify-content: center;
+}
+nav a {
+  font-size: x-large;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 0 15px;
+}

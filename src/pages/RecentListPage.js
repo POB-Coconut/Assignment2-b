@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./RecentListPage.css";
 import { RecentList } from "components";
+import { Link } from "react-router-dom";
 
 import { getBrand } from "utils/data/getBrand";
 import { getStorage } from "utils/storage/getStorage";
@@ -87,7 +88,14 @@ class RecentListPage extends Component {
     return (
       <div id="recent-page">
         <div className="recent-container">
-          <div className="header card inline-block"> 최근 조회 이력</div>
+          <nav>
+            <Link to="/" className="card ">
+              Product-page
+            </Link>
+            <Link to="/recentList" className="card clicked">
+              Recent-page
+            </Link>
+          </nav>
           <div className="header">
             <div className="filter">
               <span>브랜드 필터: </span>

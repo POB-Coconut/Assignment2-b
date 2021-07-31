@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { ProductsList, ProductDetail, PageButtons } from "components";
 import "./Product.css";
 import { paginate } from "utils/paginate";
+import { Link } from "react-router-dom";
+
 import {
   DEFAULT_PAGE,
   ERROR_MSG,
@@ -137,27 +139,37 @@ class ProductPage extends Component {
     if (this.state.isLoading || !this.state.currentProduct) return null;
 
     return (
-      <div className="container">
-        <ProductDetail
-          key={this.state.currentProduct.id}
-          curProduct={this.state.currentProduct}
-          setIsNotInterested={this.setIsNotInterested}
-          shuffleProduct={this.shuffleProduct}
-          updateRecentViews={this.updateRecentViews}
-        />
-
-        <aside className="products-list">
-          <ProductsList
-            paginatedProducts={this.state.paginatedProducts}
-            getProductDetail={this.getProductDetail}
+      <div>
+        <nav>
+          <Link to="/" className={"card clicked"}>
+            Product-page
+          </Link>
+          <Link to="/recentList" className="card">
+            Recent-page
+          </Link>
+        </nav>
+        <div className="container">
+          <ProductDetail
+            key={this.state.currentProduct.id}
+            curProduct={this.state.currentProduct}
+            setIsNotInterested={this.setIsNotInterested}
+            shuffleProduct={this.shuffleProduct}
             updateRecentViews={this.updateRecentViews}
           />
-          <PageButtons
-            paginatedProducts={this.state.paginatedProducts}
-            setPage={this.setPage}
-            page={this.state.page}
-          />
-        </aside>
+
+          <aside className="products-list">
+            <ProductsList
+              paginatedProducts={this.state.paginatedProducts}
+              getProductDetail={this.getProductDetail}
+              updateRecentViews={this.updateRecentViews}
+            />
+            <PageButtons
+              paginatedProducts={this.state.paginatedProducts}
+              setPage={this.setPage}
+              page={this.state.page}
+            />
+          </aside>
+        </div>
       </div>
     );
   }
