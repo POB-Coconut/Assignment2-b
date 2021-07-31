@@ -7,6 +7,7 @@ import {
   ERROR_MSG,
   BASE_URL,
   DEFAULT_PATH_ID,
+  ITEMS_PER_PAGE,
 } from 'utils/config';
 
 class ProductPage extends Component {
@@ -53,6 +54,9 @@ class ProductPage extends Component {
         currentProduct: products[pathId],
         isLoading: false,
       });
+      // PAGE IS BASED ON INDEX, SO PAGE 0 IS PAGE 1 FOR USER.
+      // If pathId is 19, ((19 + 1) / 10) - 1 = 1. So for user it is page 2.
+      this.setPage(Math.ceil((pathId + 1) / ITEMS_PER_PAGE) - 1);
       this.updatePaginatedProducts();
     } catch (err) {
       this.setState({ isLoading: false });
@@ -69,6 +73,7 @@ class ProductPage extends Component {
     );
 
     this.setState({ currentProduct: newProducts[randomNumber] });
+    this.updateRecentViews(newProducts[randomNumber].id);
   }
 
   setIsNotInterested(id) {
@@ -107,8 +112,8 @@ class ProductPage extends Component {
   }
 
   setLocalStorage(data) {
-    localStorage.removeItem("data");
-    localStorage.setItem("data", JSON.stringify(data));
+    localStorage.removeItem('data');
+    localStorage.setItem('data', JSON.stringify(data));
   }
 
   setPathId() {
@@ -132,7 +137,7 @@ class ProductPage extends Component {
     if (this.state.isLoading || !this.state.currentProduct) return null;
 
     return (
-      <div className="container">
+      <div className='container'>
         <ProductDetail
           key={this.state.currentProduct.id}
           curProduct={this.state.currentProduct}
@@ -141,7 +146,7 @@ class ProductPage extends Component {
           updateRecentViews={this.updateRecentViews}
         />
 
-        <aside className="products-list">
+        <aside className='products-list'>
           <ProductsList
             paginatedProducts={this.state.paginatedProducts}
             getProductDetail={this.getProductDetail}
