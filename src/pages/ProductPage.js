@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import './Product.css';
-import { DEFAULT_PAGE, ERROR_MSG, BASE_URL } from 'utils/config';
-import { ProductsList, ProductDetail, PageButtons } from 'components';
-import { paginate } from 'utils/paginate';
+import React, { Component } from "react";
+import "./Product.css";
+import { DEFAULT_PAGE, ERROR_MSG, BASE_URL } from "utils/config";
+import { ProductsList, ProductDetail, PageButtons } from "components";
+import { paginate } from "utils/paginate";
 
 class ProductPage extends Component {
   constructor() {
@@ -98,8 +98,8 @@ class ProductPage extends Component {
   }
 
   setLocalStorage(data) {
-    localStorage.removeItem('data');
-    localStorage.setItem('data', JSON.stringify(data));
+    localStorage.removeItem("data");
+    localStorage.setItem("data", JSON.stringify(data));
   }
 
   setPage(index) {
@@ -117,7 +117,7 @@ class ProductPage extends Component {
     if (this.state.isLoading || !this.state.currentProduct) return null;
 
     return (
-      <div className='container'>
+      <div className="container">
         <ProductDetail
           key={this.state.currentProduct.id}
           curProduct={this.state.currentProduct}
@@ -125,7 +125,7 @@ class ProductPage extends Component {
           shuffleProduct={this.shuffleProduct}
         />
 
-        <aside className='products-list'>
+        <aside className="products-list">
           <ProductsList
             paginatedProducts={this.state.paginatedProducts}
             getProductDetail={this.getProductDetail}
