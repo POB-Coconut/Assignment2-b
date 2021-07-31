@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 export default class ProductDetail extends Component {
   constructor(props) {
@@ -11,7 +12,7 @@ export default class ProductDetail extends Component {
       <main className='product-detail card'>
         <div className='product-detail__about'>
           <h2>{this.product.title}</h2>
-          <div className="card bar"></div>
+          <div className='card bar'></div>
           <h3>브랜드: {this.product.brand}</h3>
           <p>가격: {this.product.price}</p>
         </div>
@@ -34,6 +35,10 @@ export default class ProductDetail extends Component {
         >
           랜덤상품조회
         </button>
+
+        <Link to='/recentlist'>
+          <button className='btn-large'>상품조회이력</button>
+        </Link>
       </main>
     );
   }

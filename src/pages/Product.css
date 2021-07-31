@@ -45,9 +45,14 @@
 
 .products-list__product {
   width: 400px;
-  /* background-color: gainsboro; */
   margin-bottom: 20px;
   border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.products-list__product:hover {
+  background-color: #fefefe;
 }
 
 .products-list__product h2 {
