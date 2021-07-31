@@ -3,6 +3,7 @@ import "./temp.css";
 import { getBrand } from "utils/data/getBrand";
 import { getData } from "utils/data/getData";
 import { getStorage } from "utils/storage/getStorage";
+import { clearStorage } from "utils/storage/clearStorage";
 
 class RecentListPage extends Component {
   constructor(props) {
@@ -15,20 +16,36 @@ class RecentListPage extends Component {
     this.goShowDetail = this.goShowDetail.bind(this);
     this.state = {
       data: getStorage(),
+      originData: getStorage(),
       brand: getBrand(getStorage()),
-      originData: [],
       priceSortToggle: false,
       recentSortToggle: false,
     };
   }
 
-  onSortBrand(name, checked) {
-    const { brand, data } = this.state;
+  componentDidMount() {
+    const { data } = this.state;
+    const today = new Date().getDate();
 
+    if (data.length > 0) {
+      const currentDate = new Date(data[0].date).getDate();
+
+      if (today !== currentDate) {
+        clearStorage();
+        this.setState({
+          ...this.state,
+          data: [],
+        });
+      }
+    }
+  }
+
+  onSortBrand(name) {
+    const { brand, data, originData } = this.state;
     brand.set(name, !brand.get(name, data));
     this.setState({
       ...this.state,
-      data: getData(brand),
+      data: getData(brand, originData),
     });
   }
 
@@ -92,10 +109,10 @@ class RecentListPage extends Component {
     }
   }
 
-  goShowDetail(isNotInterested) {
+  goShowDetail(isNotInterested, id) {
     // isNotInterested가 true면 관심 있는 것 -> 페이지 이동
     if (!isNotInterested) {
-      this.props.history.push("/");
+      this.props.history.push(`/product/${id}`);
     } else {
       // isNotInterested가 false면 관심 없음 -> alert('접근금지')
       alert("관심없는 제품입니다.");
@@ -130,7 +147,10 @@ class RecentListPage extends Component {
         <button onClick={() => this.onSortCheap()}>가격 낮은 순</button>
         <div className="data">
           {this.state.data.map((i) => (
-            <ul key={i.id} onClick={() => this.goShowDetail(i.isNotInterested)}>
+            <ul
+              key={i.id}
+              onClick={() => this.goShowDetail(i.isNotInterested, i.id)}
+            >
               <li>{i.title}</li>
               <li>{i.brand}</li>
               <li>{i.price}</li>
