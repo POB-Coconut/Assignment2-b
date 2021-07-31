@@ -14,15 +14,9 @@
 }
 
 .error-page--btn {
-  background-color: aquamarine;
-  color: #f6f6f6;
-  padding: 2rem;
-  border-radius: 5px;
-}
-
-.error-page--btn {
   display: inline-flex;
   align-items: center;
+  color: #f6f6f6;
   background-color: aquamarine;
   border-radius: 5px;
   padding: 1rem 2rem;
