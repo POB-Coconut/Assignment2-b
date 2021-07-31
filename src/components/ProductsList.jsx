@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 export default class ProductsList extends Component {
   render() {
@@ -9,7 +10,7 @@ export default class ProductsList extends Component {
 
           if (isNotInterested) {
             return (
-              <li className='products-list__product not-interested' key={id}>
+              <li key={id} className='products-list__product'>
                 <h2>{title}</h2>
               </li>
             );
@@ -24,7 +25,9 @@ export default class ProductsList extends Component {
               }}
               key={id}
             >
-              <h2>{title}</h2>
+              <Link to={`/product/${id}`}>
+                <h2>{title}</h2>
+              </Link>
             </li>
           );
         })}

@@ -36,13 +36,13 @@
   width: 400px;
   background-color: gainsboro;
   margin-bottom: 10px;
-  padding: 12px;
   border-radius: 10px;
   cursor: pointer;
 }
 
 .products-list__product h2 {
   font-size: 1rem;
+  padding: 12px;
 }
 
 .btn-large {

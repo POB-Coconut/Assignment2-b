@@ -20,6 +20,7 @@ export default class ProductDetail extends Component {
           onClick={() => {
             this.props.setIsNotInterested(this.product.id);
             this.props.shuffleProduct();
+            this.props.updateRecentViews(this.product.id);
           }}
         >
           관심없음

@@ -6,9 +6,13 @@ class App extends Component {
   render() {
     return (
       <Switch>
-        <Route exact path={["/", "/product"]} component={ProductPage} />
-        <Route exact path="/recentList" component={RecentListPage} />
-        <Route path="*" component={ErrorPage} />
+        <Route
+          exact
+          path={['/', '/product', '/product/:id']}
+          component={ProductPage}
+        />
+        <Route exact path='/recentList' component={RecentListPage} />
+        <Route path='*' component={ErrorPage} />
       </Switch>
     );
   }
