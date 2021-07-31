@@ -35,22 +35,19 @@ body {
   margin: 10px;
 }
 .header .card {
-  /* border: 1px solid rgba(255, 255, 255, 0.2); */
   border-radius: 10px;
   padding: 5px 10px;
   margin: 10px;
+  cursor: pointer;
 }
 
 .header input {
   display: none;
 }
-.header input:checked {
-  background: red;
-}
+
 .data {
   margin-top: 50px;
   display: grid;
-  /* gap: 10px 20px; */
   grid-template-columns: 1fr;
   grid-gap: 10px;
   height: 100%;
@@ -59,24 +56,6 @@ body {
   .data {
     grid-template-columns: 1fr 1fr;
   }
-}
-
-.card {
-  cursor: pointer;
-  transition-duration: 0.2s;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 9px 9px 16px rgba(163, 177, 198, 0.6),
-    -9px -9px 16px rgba(255, 255, 255, 0.5);
-}
-.card:hover {
-  box-shadow: 15px 15px 22px rgb(163, 177, 198),
-    -15px -15px 22px rgb(255, 255, 255);
-}
-.card.clicked {
-  /* color: red; */
-  box-shadow: 9px 9px 16px rgba(163, 177, 198, 0.6),
-    -9px -9px 16px rgba(255, 255, 255, 0.5),
-    inset 3px 3px 7px rgba(136, 165, 191, 0.48), inset -3px -3px 7px #ffffff;
 }
 
 dl.card {

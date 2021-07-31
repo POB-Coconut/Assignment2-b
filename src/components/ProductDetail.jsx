@@ -8,15 +8,16 @@ export default class ProductDetail extends Component {
 
   render() {
     return (
-      <main className='product-detail'>
+      <main className='product-detail card'>
         <div className='product-detail__about'>
           <h2>{this.product.title}</h2>
+          <div className="card bar"></div>
           <h3>브랜드: {this.product.brand}</h3>
           <p>가격: {this.product.price}</p>
         </div>
 
         <button
-          className='btn-large'
+          className='btn-large card'
           onClick={() => {
             this.props.setIsNotInterested(this.product.id);
             this.props.shuffleProduct();
@@ -26,7 +27,7 @@ export default class ProductDetail extends Component {
           관심없음
         </button>
         <button
-          className='btn-large'
+          className='btn-large card'
           onClick={() => {
             this.props.shuffleProduct();
           }}

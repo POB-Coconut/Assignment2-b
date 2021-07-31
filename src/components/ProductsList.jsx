@@ -18,7 +18,7 @@ export default class ProductsList extends Component {
 
           return (
             <li
-              className='products-list__product'
+              className='products-list__product card'
               onClick={() => {
                 this.props.getProductDetail(id);
                 this.props.updateRecentViews(id);
