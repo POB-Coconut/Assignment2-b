@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import "./temp.css";
 
-const storageData = JSON.parse(localStorage.getItem("data")) || [];
+const today = new Date().getDate();
+const storageData =
+  JSON.parse(localStorage.getItem("data")).filter(
+    (i) => new Date(i.date).getDate() === today
+  ) || [];
 
 function getBrand(props) {
   const map = new Map();
@@ -193,6 +197,7 @@ class RecentListPage extends Component {
                   onClick={() => this.onShowDetail(i.interest)}
                 >
                   {/* <dd className="card-id">{i.id}</dd> */}
+                  <dd className="card-brand">{i.id}</dd>
                   <dd className="card-brand">{i.brand}</dd>
                   <dd className="card-title">{i.title}</dd>
                   <dd className="card-price">\{i.price}</dd>
