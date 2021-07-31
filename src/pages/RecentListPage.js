@@ -1,36 +1,31 @@
 import React, { Component } from "react";
 import "./temp.css";
 
-const today = new Date().getDate();
-const storageData = JSON.parse(localStorage.getItem("data") || "[]")
-  .filter((i) => new Date(i.date).getDate() === today)
-  .sort((a, b) => a.id - b.id);
+import { getBrand } from "utils/data/getBrand";
+// import { getData } from "utils/data/getData";
+import { getStorage } from "utils/storage/getStorage";
 
-// function removeStorage() {
-//   localStorage.clear();
-// }
+const storageData = getStorage();
 
 class RecentListPage extends Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
+    // this.onSortBrand = this.onSortBrand.bind(this);
+    // this.onSortBrand = this.onSortBrand.bind(this);
+    // this.onInterset = this.onInterset.bind(this);
+    // this.onSortCheap = this.onSortCheap.bind(this);
+    // this.onSortRecent = this.onSortRecent.bind(this);
+    // this.goShowDetail = this.goShowDetail.bind(this);
     this.state = {
       data: storageData.slice(),
-      brand: this.getBrand(storageData),
+      brand: getBrand(storageData),
       originData: [],
-      interestToggle: false,
-      priceSortToggle: false,
+      interestToggle: true,
+      priceSortToggle: 0,
       recentSortToggle: false,
     };
   }
-  getBrand(props) {
-    const map = new Map();
-    props.forEach((element) => {
-      map.set(element.brand, true);
-    });
 
-    return map;
-  }
   getData() {
     const data = this.state.data.filter((item) => {
       return (
@@ -56,14 +51,17 @@ class RecentListPage extends Component {
 
   onSortCheap() {
     const { priceSortToggle, data } = this.state;
-
+    const newToggle = (priceSortToggle + 1) % 3;
     this.setState({
       ...this.state,
       recentSortToggle: false,
-      priceSortToggle: !priceSortToggle,
-      data: !priceSortToggle
-        ? data.sort((a, b) => a.price - b.price)
-        : storageData.slice(),
+      priceSortToggle: newToggle,
+      data:
+        newToggle === 0
+          ? storageData.slice()
+          : newToggle === 1
+          ? data.sort((a, b) => a.price - b.price)
+          : data.sort((a, b) => b.price - a.price),
     });
   }
 
@@ -72,15 +70,15 @@ class RecentListPage extends Component {
 
     this.setState({
       ...this.state,
-      priceSortToggle: false,
+      priceSortToggle: 0,
       recentSortToggle: !recentSortToggle,
       data: !recentSortToggle
-        ? data.sort((a, b) => new Date(a.date) - new Date(b.date))
+        ? data.sort((a, b) => new Date(b.date) - new Date(a.date))
         : storageData.slice(),
     });
   }
 
-  onShowDetail(isNotInterested) {
+  goShowDetail(isNotInterested) {
     // isNotInterested가 true면 관심 있는 것 -> 페이지 이동
     if (!isNotInterested) {
       this.props.history.push("/");
@@ -140,7 +138,9 @@ class RecentListPage extends Component {
                 }
                 onClick={() => this.onSortCheap()}
               >
-                가격 낮은 순
+                {this.state.priceSortToggle === 2
+                  ? "가격 높은순"
+                  : "가격 낮은순"}
               </button>
             </div>
           </div>
@@ -154,9 +154,9 @@ class RecentListPage extends Component {
                 <dl
                   className="card"
                   key={i.id}
-                  onClick={() => this.onShowDetail(i.isNotInterested)}
+                  onClick={() => this.goShowDetail(i.isNotInterested)}
                 >
-                  {/* <dd className="card-id">{i.id}</dd> */}
+                  <dd className="card-id">{i.id}</dd>
                   <dd className="card-brand">{i.brand}</dd>
                   <dd className="card-title">{i.title}</dd>
                   <dd className="card-price">\{i.price}</dd>
