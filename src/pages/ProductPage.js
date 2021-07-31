@@ -125,7 +125,7 @@ class ProductPage extends Component {
           shuffleProduct={this.shuffleProduct}
         />
 
-        <aside>
+        <aside className='products-list'>
           <ProductsList
             paginatedProducts={this.state.paginatedProducts}
             getProductDetail={this.getProductDetail}

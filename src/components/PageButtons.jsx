@@ -27,13 +27,16 @@ export default class PageButtons extends Component {
   render() {
     return (
       <div>
-        <button type='button' onClick={this.goToPrevPage}>
+        <button className='btn-small' type='button' onClick={this.goToPrevPage}>
           prev
         </button>
 
         {this.props.paginatedProducts.map((_, index) => {
           return (
             <button
+              className={`btn-small ${
+                index === this.props.page && 'btn-current'
+              }`}
               type='button'
               key={index}
               onClick={() => this.props.setPage(index)}
@@ -42,7 +45,7 @@ export default class PageButtons extends Component {
             </button>
           );
         })}
-        <button type='button' onClick={this.goToNextPage}>
+        <button className='btn-small' type='button' onClick={this.goToNextPage}>
           next
         </button>
       </div>
