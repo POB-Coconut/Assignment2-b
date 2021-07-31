@@ -1,40 +1,53 @@
 import React, { Component } from "react";
-import { v4 as uuidv4 } from "uuid";
 import "./Product.css";
+import { DEFAULT_PAGE, ERROR_MSG, BASE_URL } from "utils/config";
+import { ProductsList, ProductDetail, PageButtons } from "components";
+import { paginate } from "utils/paginate";
 
 class ProductPage extends Component {
   constructor() {
     super();
     this.state = {
+      isLoading: false,
       products: [],
       currentProduct: null,
       recentViews: [],
+      page: DEFAULT_PAGE,
+      paginatedProducts: [],
     };
-  }
 
-  setLocalStorage(data) {
-    localStorage.removeItem('data');
-    localStorage.setItem('data', JSON.stringify(data));
+    this.getProductDetail = this.getProductDetail.bind(this);
+    this.updateRecentViews = this.updateRecentViews.bind(this);
+    this.setIsNotInterested = this.setIsNotInterested.bind(this);
+    this.shuffleProduct = this.shuffleProduct.bind(this);
+    this.setPage = this.setPage.bind(this);
   }
 
   async componentDidMount() {
+    this.setState({ isLoading: true });
+
     try {
-      const res = await fetch("http://localhost:3000/data/productData.json");
+      const res = await fetch(`${BASE_URL}/data/productData.json`);
       const data = await res.json();
-      this.setState({
-        products: data.map((product) => {
-          product.id = uuidv4();
-          product.isNotInterested = false;
-          return product;
-        }),
+
+      if (!res.ok) throw new Error(ERROR_MSG);
+
+      const products = data.map((product, index) => {
+        product.id = index + 1;
+        product.isNotInterested = false;
+
+        return product;
       });
+
+      this.setState({ products });
       this.setState({
-        currentProduct: this.state.products[0],
+        currentProduct: products[0],
+        isLoading: false,
       });
-      if (!res.ok) {
-        throw new Error("error");
-      }
+      this.updatePaginatedProducts();
+      //   this.updatePaginatedProducts(products, this.state.page);
     } catch (err) {
+      this.setState({ isLoading: false });
       console.error(err);
     }
   }
@@ -47,9 +60,7 @@ class ProductPage extends Component {
       Math.random() * (newProducts.length - 0) + 0
     );
 
-    this.setState({
-      currentProduct: newProducts[randomNumber],
-    });
+    this.setState({ currentProduct: newProducts[randomNumber] });
   }
 
   setIsNotInterested(id) {
@@ -59,18 +70,15 @@ class ProductPage extends Component {
       return product;
     });
 
-    this.setState({
-      products: newProducts,
-    });
+    this.setState({ products: newProducts });
   }
 
   getProductDetail(id) {
     const targetProduct = this.state.products.find(
       (product) => product.id === id
     );
-    this.setState({
-      currentProduct: targetProduct,
-    });
+
+    this.setState({ currentProduct: targetProduct });
   }
 
   updateRecentViews(id) {
@@ -80,67 +88,55 @@ class ProductPage extends Component {
     const targetProduct = this.state.products.find(
       (product) => product.id === id
     );
+    const date = new Date();
+    const recentPrduct = { ...targetProduct, date };
 
-    newRecentViews.unshift(targetProduct);
+    newRecentViews.unshift(recentPrduct);
 
-    this.setState({
-      recentViews: newRecentViews,
-    });
-
+    this.setState({ recentViews: newRecentViews });
     this.setLocalStorage(newRecentViews);
   }
 
+  setLocalStorage(data) {
+    localStorage.removeItem("data");
+    localStorage.setItem("data", JSON.stringify(data));
+  }
+
+  setPage(index) {
+    this.setState({ page: index });
+    this.updatePaginatedProducts();
+  }
+
+  updatePaginatedProducts() {
+    this.setState((state) => ({
+      paginatedProducts: paginate(state.products)[state.page],
+    }));
+  }
+
   render() {
-    if (!this.state.currentProduct) return <div></div>;
+    if (this.state.isLoading || !this.state.currentProduct) return null;
 
     return (
       <div className="container">
-        <div className="product-detail">
-          <h2>{this.state.currentProduct.title}</h2>
-          <h2>{this.state.currentProduct.brand}</h2>
-          <h2>{this.state.currentProduct.price}</h2>
-          <button
-            onClick={() => {
-              this.setIsNotInterested(this.state.currentProduct.id);
-              this.shuffleProduct();
-            }}
-          >
-            관심없음
-          </button>
-          <button
-            onClick={() => {
-              this.shuffleProduct();
-            }}
-          >
-            랜덤상품조회
-          </button>
-        </div>
-        <ul className="products">
-          {this.state.products.map((product) => {
-            const { title, id, isNotInterested } = product;
+        <ProductDetail
+          key={this.state.currentProduct.id}
+          curProduct={this.state.currentProduct}
+          setIsNotInterested={this.setIsNotInterested}
+          shuffleProduct={this.shuffleProduct}
+        />
 
-            if (isNotInterested) {
-              return (
-                <li className="product not-interested" key={id}>
-                  <h2 className="title">{title}</h2>
-                </li>
-              );
-            }
-
-            return (
-              <li
-                className="product"
-                onClick={() => {
-                  this.getProductDetail(id);
-                  this.updateRecentViews(id);
-                }}
-                key={id}
-              >
-                <h2 className="title">{title}</h2>
-              </li>
-            );
-          })}
-        </ul>
+        <aside className="products-list">
+          <ProductsList
+            paginatedProducts={this.state.paginatedProducts}
+            getProductDetail={this.getProductDetail}
+            updateRecentViews={this.updateRecentViews}
+          />
+          <PageButtons
+            paginatedProducts={this.state.paginatedProducts}
+            setPage={this.setPage}
+            page={this.state.page}
+          />
+        </aside>
       </div>
     );
   }
