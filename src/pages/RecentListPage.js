@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import "./temp.css";
+import "./RecentListPage.css";
+import { RecentList } from "components";
 
 import { getBrand } from "utils/data/getBrand";
-// import { getData } from "utils/data/getData";
 import { getStorage } from "utils/storage/getStorage";
 
 const storageData = getStorage();
@@ -10,17 +10,12 @@ const storageData = getStorage();
 class RecentListPage extends Component {
   constructor(props) {
     super(props);
-    // this.onSortBrand = this.onSortBrand.bind(this);
-    // this.onSortBrand = this.onSortBrand.bind(this);
-    // this.onInterset = this.onInterset.bind(this);
-    // this.onSortCheap = this.onSortCheap.bind(this);
-    // this.onSortRecent = this.onSortRecent.bind(this);
-    // this.goShowDetail = this.goShowDetail.bind(this);
+    this.goShowDetail = this.goShowDetail.bind(this);
     this.state = {
       data: storageData.slice(),
       brand: getBrand(storageData),
       originData: [],
-      interestToggle: true,
+      interestToggle: false,
       priceSortToggle: 0,
       recentSortToggle: false,
     };
@@ -36,7 +31,7 @@ class RecentListPage extends Component {
     return data;
   }
 
-  handleClick(name) {
+  onFilterBrand(name) {
     const { brand } = this.state;
     brand.set(name, !brand.get(name));
     this.setState({ ...this.state, brand });
@@ -78,10 +73,10 @@ class RecentListPage extends Component {
     });
   }
 
-  goShowDetail(isNotInterested) {
+  goShowDetail(isNotInterested, id) {
     // isNotInterested가 true면 관심 있는 것 -> 페이지 이동
     if (!isNotInterested) {
-      this.props.history.push("/");
+      this.props.history.push(`/product/${id}`);
     } else {
       // isNotInterested가 false면 관심 없음 -> alert('접근금지')
       alert("관심없는 제품입니다.");
@@ -107,7 +102,7 @@ class RecentListPage extends Component {
                       type="checkbox"
                       defaultChecked={isChecked}
                       onChange={() => {
-                        this.handleClick(name);
+                        this.onFilterBrand(name);
                       }}
                     />
                   </label>
@@ -151,21 +146,12 @@ class RecentListPage extends Component {
               const min = date.getMinutes();
               const sec = date.getSeconds();
               return (
-                <dl
-                  className="card"
+                <RecentList
                   key={i.id}
-                  onClick={() => this.goShowDetail(i.isNotInterested)}
-                >
-                  <dd className="card-id">{i.id}</dd>
-                  <dd className="card-brand">{i.brand}</dd>
-                  <dd className="card-title">{i.title}</dd>
-                  <dd className="card-price">\{i.price}</dd>
-                  {/* {i.isNotInterested && <dd>관심없는 상품</dd>} */}
-                  <dd className="card-date">
-                    <span>접속 로그:</span>
-                    <span>{`${hour}시 ${min}분 ${sec}초`}</span>
-                  </dd>
-                </dl>
+                  item={i}
+                  goShowDetail={this.goShowDetail}
+                  date={{ hour, min, sec }}
+                />
               );
             })}
           </div>
