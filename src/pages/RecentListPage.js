@@ -140,37 +140,47 @@ class RecentListPage extends Component {
 
   render() {
     return (
-      <div>
-        <div className="header">
-          <div className="filter">
-            <span>브랜드: </span>
-            {Array.from(this.state.brand.entries()).map(([name, isChecked]) => (
-              <label
-                className={"card " + (isChecked ? "clicked" : "")}
-                key={name}
-              >
-                {name}
+      <div id="recent-page">
+        <div className="recent-container">
+          <div className="header card inline-block"> 최근 조회 이력</div>
+          <div className="header">
+            <div className="filter">
+              <span>브랜드 필터: </span>
+              {Array.from(this.state.brand.entries()).map(
+                ([name, isChecked]) => (
+                  <label
+                    className={"card " + (isChecked ? "clicked" : "")}
+                    key={name}
+                  >
+                    {name}
+                    <input
+                      type="checkbox"
+                      defaultChecked={isChecked}
+                      onChange={() => {
+                        this.handleClick(name);
+                      }}
+                    />
+                  </label>
+                )
+              )}
+            </div>
+            <div className="option">
+              <span>옵션: </span>
+              <label className="card">
+                관심없는 상품 제거
                 <input
                   type="checkbox"
-                  defaultChecked={isChecked}
-                  onChange={() => {
-                    this.handleClick(name);
-                  }}
+                  onChange={(e) => this.onInterset(e.target.checked)}
                 />
               </label>
-            ))}
+              <button className="card" onClick={() => this.onSortRecent()}>
+                최근 조회 순
+              </button>
+              <button className="card" onClick={() => this.onSortCheap()}>
+                가격 낮은 순
+              </button>
+            </div>
           </div>
-          <label>
-            관심 없는 상품 제거하기
-            <input
-              type="checkbox"
-              onChange={(e) => this.onInterset(e.target.checked)}
-            />
-          </label>
-          <button onClick={() => this.onSortRecent()}>최근 조회 순</button>
-          <button onClick={() => this.onSortCheap()}>가격 낮은 순</button>
-        </div>
-        <div className="recent-container">
           <div className="data">
             {this.state.data.map((i) => {
               const date = new Date(i.date);
