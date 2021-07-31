@@ -6,7 +6,7 @@
 
 ## 데모 링크
 
-🔗 [페이지 링크](https://github.com/POB-Coconut/Assignment2-b)
+🔗 [페이지 링크](https://mrcamel.netlify.app/)
 
 ### 설치 및 실행 방법
 
