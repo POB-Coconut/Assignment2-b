@@ -51,10 +51,6 @@
   transition: all 0.2s;
 }
 
-.products-list__product:hover {
-  background-color: #fefefe;
-}
-
 .products-list__product h2 {
   font-size: 1rem;
   padding: 12px;

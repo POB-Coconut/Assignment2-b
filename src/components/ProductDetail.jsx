@@ -35,10 +35,6 @@ export default class ProductDetail extends Component {
         >
           랜덤상품조회
         </button>
-
-        <Link to='/recentlist'>
-          <button className='btn-large'>상품조회이력</button>
-        </Link>
       </main>
     );
   }
