@@ -49,9 +49,15 @@ body {
 .data {
   margin-top: 50px;
   display: grid;
-  gap: 10px 20px;
-  grid-template-columns: repeat(2, minmax(300px, auto));
+  /* gap: 10px 20px; */
+  grid-template-columns: 1fr;
+  grid-gap: 10px;
   height: 100%;
+}
+@media (min-width: 800px) {
+  .data {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .card {
@@ -73,9 +79,10 @@ body {
 }
 
 dl.card {
+  margin: 10px;
   flex: 1;
   border-radius: 10px;
-
+  /* width: 100%; */
   /* border: 1px solid #e9ecef; */
   padding: 20px;
   margin-bottom: 20px;
@@ -84,6 +91,8 @@ dl.card {
   margin-bottom: 10px;
 }
 .card-id {
+  display: inline-block;
+  margin-right: 5px;
 }
 .card-brand {
   display: inline-block;

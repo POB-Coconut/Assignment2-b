@@ -2,145 +2,93 @@ import React, { Component } from "react";
 import "./temp.css";
 
 const today = new Date().getDate();
-const storageData =
-  JSON.parse(localStorage.getItem("data")).filter(
-    (i) => new Date(i.date).getDate() === today
-  ) || [];
+const storageData = JSON.parse(localStorage.getItem("data") || "[]")
+  .filter((i) => new Date(i.date).getDate() === today)
+  .sort((a, b) => a.id - b.id);
 
-function getBrand(props) {
-  const map = new Map();
-  props.forEach((element) => {
-    map.set(element.brand, true);
-  });
-
-  return map;
-}
-
-function getData(brand) {
-  const data = storageData.filter((item) => {
-    return brand.get(item.brand);
-  });
-  return data;
-}
+// function removeStorage() {
+//   localStorage.clear();
+// }
 
 class RecentListPage extends Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
     this.state = {
-      data: storageData,
-      brand: getBrand(storageData),
-      tempData: [],
-      priceToggle: true,
-      recentToggle: true,
+      data: storageData.slice(),
+      brand: this.getBrand(storageData),
+      originData: [],
+      interestToggle: false,
+      priceSortToggle: false,
+      recentSortToggle: false,
     };
   }
+  getBrand(props) {
+    const map = new Map();
+    props.forEach((element) => {
+      map.set(element.brand, true);
+    });
+
+    return map;
+  }
+  getData() {
+    const data = this.state.data.filter((item) => {
+      return (
+        this.state.brand.get(item.brand) &&
+        (this.state.interestToggle ? item.isNotInterested : true)
+      );
+    });
+    return data;
+  }
+
   handleClick(name) {
-    this.state.brand.set(name, !this.state.brand.get(name));
-    this.setState(() => {
-      return { ...this.state, data: getData(this.state.brand) };
+    const { brand } = this.state;
+    brand.set(name, !brand.get(name));
+    this.setState({ ...this.state, brand });
+  }
+
+  onInterset() {
+    this.setState({
+      ...this.state,
+      interestToggle: !this.state.interestToggle,
     });
   }
 
-  onInterset(checked) {
-    const { data, tempData } = this.state;
-    if (checked) {
-      this.setState({
-        tempData: [...data],
-        data: data.filter((v) => v.interest),
-      });
-    } else {
-      this.setState({
-        data: [...tempData],
-      });
-    }
-    // this.setState(() => {
-    //   return { ...this.state, data: getData(this.state.brand) };
-    // });
-    console.log(this.state, checked);
-  }
-
   onSortCheap() {
-    const { priceToggle, data } = this.state;
+    const { priceSortToggle, data } = this.state;
 
-    if (priceToggle) {
-      this.setState({
-        priceToggle: !priceToggle,
-        data: data.sort((a, b) => a.price - b.price),
-      });
-    } else {
-      this.setState({
-        priceToggle: !priceToggle,
-        data: data.sort((a, b) => b.price - a.price),
-      });
-    }
+    this.setState({
+      ...this.state,
+      recentSortToggle: false,
+      priceSortToggle: !priceSortToggle,
+      data: !priceSortToggle
+        ? data.sort((a, b) => a.price - b.price)
+        : storageData.slice(),
+    });
   }
 
   onSortRecent() {
-    const { recentToggle, data } = this.state;
+    const { recentSortToggle, data } = this.state;
 
-    if (recentToggle) {
-      this.setState({
-        recentToggle: !recentToggle,
-        data: data.sort((a, b) => new Date(a.date) - new Date(b.date)),
-      });
-    } else {
-      this.setState({
-        recentToggle: !recentToggle,
-        data: data.sort((a, b) => new Date(b.date) - new Date(a.date)),
-      });
-    }
+    this.setState({
+      ...this.state,
+      priceSortToggle: false,
+      recentSortToggle: !recentSortToggle,
+      data: !recentSortToggle
+        ? data.sort((a, b) => new Date(a.date) - new Date(b.date))
+        : storageData.slice(),
+    });
   }
 
-  onShowDetail(interest) {
-    // interest가 true면 관심 있는 것 -> 페이지 이동
-    if (interest) {
+  onShowDetail(isNotInterested) {
+    // isNotInterested가 true면 관심 있는 것 -> 페이지 이동
+    if (!isNotInterested) {
       this.props.history.push("/");
     } else {
-      // interest가 false면 관심 없음 -> alert('접근금지')
+      // isNotInterested가 false면 관심 없음 -> alert('접근금지')
       alert("관심없는 제품입니다.");
     }
   }
-
-  // componentDidMount() {
-  //   localStorage.setItem(
-  //     "data",
-  //     JSON.stringify([
-  //       {
-  //         title: "거의새것 정품 구찌 보스턴백 토트백",
-  //         brand: "구찌",
-  //         price: 380000,
-  //         interest: false,
-  //         id: 1,
-  //         date: new Date(2021, 6, 2),
-  //       },
-  //       {
-  //         title: "중고 루이비통 장지갑 백화점 풀구성",
-  //         brand: "루이비통",
-  //         price: 400000,
-  //         interest: true,
-  //         id: 2,
-  //         date: new Date(2021, 6, 3),
-  //       },
-  //       {
-  //         title: "중고 스톤아일랜드 쉐도우와팬 봄니트 95",
-  //         brand: "스톤아일랜드",
-  //         price: 350000,
-  //         interest: false,
-  //         id: 3,
-  //         date: new Date(2021, 6, 1),
-  //       },
-  //       {
-  //         title: "구찌 스트랩 클러치 판매합니다.",
-  //         brand: "구찌",
-  //         price: 30000,
-  //         interest: true,
-  //         id: 4,
-  //         date: new Date(2021, 6, 6),
-  //       },
-  //     ])
-  //   );
-  // }
 
   render() {
     return (
@@ -170,40 +118,52 @@ class RecentListPage extends Component {
             </div>
             <div className="option">
               <span>옵션: </span>
-              <label className="card">
+              <label
+                className={
+                  "card " + (this.state.interestToggle ? "clicked" : "")
+                }
+              >
                 관심없는 상품 제거
-                <input
-                  type="checkbox"
-                  onChange={(e) => this.onInterset(e.target.checked)}
-                />
+                <input type="checkbox" onChange={(e) => this.onInterset()} />
               </label>
-              <button className="card" onClick={() => this.onSortRecent()}>
+              <button
+                className={
+                  "card " + (this.state.recentSortToggle ? "clicked" : "")
+                }
+                onClick={() => this.onSortRecent()}
+              >
                 최근 조회 순
               </button>
-              <button className="card" onClick={() => this.onSortCheap()}>
+              <button
+                className={
+                  "card " + (this.state.priceSortToggle ? "clicked" : "")
+                }
+                onClick={() => this.onSortCheap()}
+              >
                 가격 낮은 순
               </button>
             </div>
           </div>
           <div className="data">
-            {this.state.data.map((i) => {
+            {this.getData(this.state.data).map((i) => {
               const date = new Date(i.date);
               const hour = date.getHours();
               const min = date.getMinutes();
+              const sec = date.getSeconds();
               return (
                 <dl
                   className="card"
                   key={i.id}
-                  onClick={() => this.onShowDetail(i.interest)}
+                  onClick={() => this.onShowDetail(i.isNotInterested)}
                 >
                   {/* <dd className="card-id">{i.id}</dd> */}
-                  <dd className="card-brand">{i.id}</dd>
                   <dd className="card-brand">{i.brand}</dd>
                   <dd className="card-title">{i.title}</dd>
                   <dd className="card-price">\{i.price}</dd>
+                  {/* {i.isNotInterested && <dd>관심없는 상품</dd>} */}
                   <dd className="card-date">
                     <span>접속 로그:</span>
-                    <span>{`${hour}시 ${min}분`}</span>
+                    <span>{`${hour}시 ${min}분 ${sec}초`}</span>
                   </dd>
                 </dl>
               );
